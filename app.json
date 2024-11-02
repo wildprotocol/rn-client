@@ -1,0 +1,97 @@
+{
+  "name": "wildcard",
+  "displayName": "wildcard",
+  "expo": {
+    "name": "Wildcard",
+    "slug": "wildcard",
+    "scheme": "wildcard",
+    "owner": "wildcard-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "icon": "./assets/images/app-icon-all.png",
+    "splash": {
+      "image": "./assets/images/splash-logo-all.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#01150B"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "jsEngine": "hermes",
+    "assetBundlePatterns": ["**/*"],
+    "android": {
+      "icon": "./assets/images/app-icon-android-legacy.png",
+      "package": "lol.wildcard.app",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/app-icon-android-adaptive-foreground.png",
+        "backgroundImage": "./assets/images/app-icon-android-adaptive-background.png"
+      },
+      "splash": {
+        "image": "./assets/images/splash-logo-android-universal.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#01150B"
+      }
+    },
+    "ios": {
+      "icon": "./assets/images/app-icon-ios.png",
+      "supportsTablet": true,
+      "bundleIdentifier": "lol.wildcard.ios",
+      "splash": {
+        "image": "./assets/images/splash-logo-ios-mobile.png",
+        "tabletImage": "./assets/images/splash-logo-ios-tablet.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#01150B"
+      }
+    },
+    "web": {
+      "favicon": "./assets/images/app-icon-web-favicon.png",
+      "splash": {
+        "image": "./assets/images/splash-logo-web.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#01150B"
+      },
+      "bundler": "metro"
+    },
+    "extra": {
+      "privyAppId": "clvdnjki00bvbzqjkecroowp3",
+      "eas": {
+        "projectId": "0febd199-bad2-4faa-831d-56aab30a256a"
+      }
+    },
+    "plugins": [
+      "expo-localization",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "newArchEnabled": true
+          },
+          "android": {
+            "newArchEnabled": true
+          }
+        }
+      ],
+      "expo-font",
+      "expo-secure-store",
+      [
+        "expo-secure-store",
+        {
+          "faceIDPermission": "Allow $(PRODUCT_NAME) to access your Face ID biometric data."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ]
+    ],
+    "experiments": {
+      "tsconfigPaths": true
+    }
+  },
+  "ignite": {
+    "version": "10.0.1"
+  }
+}
