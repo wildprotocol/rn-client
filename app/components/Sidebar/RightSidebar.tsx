@@ -3,11 +3,10 @@ import { Image, LayoutAnimation, Switch, TouchableOpacity, View, ViewStyle } fro
 
 import { DrawerContentComponentProps, DrawerContentScrollView } from "@react-navigation/drawer"
 import { useNavigation } from "@react-navigation/native"
-import type { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { Moon, Sun } from "phosphor-react-native"
 
 import { dummyUser } from "@/data/dummyUser"
-import { AppStackScreenProps } from "@/navigators"
+import { NavigationProps } from "@/navigators"
 import { $styles, ThemedStyle } from "@/theme"
 import { useAppTheme } from "@/utils"
 
@@ -16,7 +15,7 @@ import { MENU_ITEMS } from "./sidebarConstants"
 
 const ProfileSection: React.FC = memo(() => {
   const { themed } = useAppTheme()
-  const navigation = useNavigation<NativeStackNavigationProp<AppStackScreenProps<"Profile">>>()
+  const navigation = useNavigation<NavigationProps>()
 
   const handleProfilePress = useCallback(() => {
     navigation.navigate("Profile")
@@ -47,7 +46,7 @@ const MenuSection: React.FC = memo(() => {
     themed,
     theme: { colors },
   } = useAppTheme()
-  const navigation = useNavigation<NativeStackNavigationProp<AppStackScreenProps<"Profile">>>()
+  const navigation = useNavigation<NavigationProps>()
 
   const handleMenuPress = useCallback(
     (itemId: number) => {

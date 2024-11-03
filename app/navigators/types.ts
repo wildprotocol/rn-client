@@ -16,19 +16,19 @@ import { PostCardProps } from "@/components/PostCard"
  *   https://reactnavigation.org/docs/typescript#type-checking-the-navigator
  *   https://reactnavigation.org/docs/typescript/#organizing-types
  */
-export interface AppStackParamList {
+export type AppStackParamList = {
   Welcome: undefined
   DrawerNavigator: undefined
   CreateCast: undefined
   Drafts: undefined
   Scheduled: undefined
   GifPicker: undefined
+  PostTo: undefined
+  Profile: undefined
   PostDetails: {
     post: PostCardProps
     showComments?: boolean
   }
-  Profile: undefined
-  PostTo: undefined
 }
 
 // Auth Stack

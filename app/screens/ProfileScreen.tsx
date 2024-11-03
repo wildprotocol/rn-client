@@ -55,7 +55,7 @@ interface ProfileScreenProps extends AppStackScreenProps<"Profile"> {}
  * @param {ProfileScreenProps} props - The props for the ProfileScreen component
  * @returns {JSX.Element} The rendered ProfileScreen component
  */
-export const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
+export const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }: ProfileScreenProps) => {
   const { themed, theme } = useAppTheme()
   const [isFollowing, setIsFollowing] = useState(false)
 
