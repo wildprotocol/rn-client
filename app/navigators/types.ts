@@ -53,7 +53,13 @@ export type TabParamList = {
   Notifications: undefined
   Wallet: undefined
   Chat: undefined
-  CreatePost: undefined
+  CreatePost: {
+    selectedSubCategory?: {
+      id: string
+      name: string
+      imageUrl: string
+    }
+  }
 }
 
 // Drawer Navigator

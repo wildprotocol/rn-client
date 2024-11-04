@@ -8,8 +8,9 @@ import {
   authenticationStoreSelector,
   createAuthenticationSlice,
 } from "./AuthenticationStore"
+import { CreatePostStore, createCreatePostSlice, createPostStoreSelector } from "./CreatePostStore"
 
-export interface RootStore extends AuthenticationStore {
+export interface RootStore extends AuthenticationStore, CreatePostStore {
   _hasHydrated: boolean
   setHasHydrated: (state: boolean) => void
 }
@@ -32,6 +33,7 @@ export const useStore = create<RootStore>()(
   persist(
     (...a) => ({
       ...createAuthenticationSlice(...a),
+      ...createCreatePostSlice(...a), // TODO: We don't need to persist the create post slice
       // add your state slices here
 
       _hasHydrated: false,
@@ -53,3 +55,4 @@ export const useStore = create<RootStore>()(
 )
 
 export const useAuthenticationStore = () => useStore(useShallow(authenticationStoreSelector))
+export const useCreatePostStore = () => useStore(useShallow(createPostStoreSelector))

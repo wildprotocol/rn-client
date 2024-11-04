@@ -3,17 +3,25 @@ import { Pressable, TextInput, TextStyle, View, ViewStyle } from "react-native"
 
 import * as ImagePicker from "expo-image-picker"
 import { debounce } from "lodash"
-import { Image, Link, PlayCircle, X } from "phosphor-react-native"
+import { CaretDown, Image, Link, PlayCircle, X } from "phosphor-react-native"
 import FastImage, { ImageStyle } from "react-native-fast-image"
 
-import { Button, Screen } from "@/components"
+import { Button, Screen, Text } from "@/components"
+import { ConfirmationModal } from "@/components/ConfirmationModal"
 import { TabScreenProps } from "@/navigators"
+import { useCreatePostStore } from "@/store/RootStore"
 import { $styles, ThemedStyle } from "@/theme"
 import { useAppTheme } from "@/utils"
 
 import { useUrlPreview } from "./hooks/useUrlPreview"
 
-interface CreatePostScreenProps extends TabScreenProps<"CreatePost"> {}
+interface CreatePostScreenProps extends TabScreenProps<"CreatePost"> {
+  selectedSubCategory?: {
+    id: string
+    name: string
+    imageUrl: string
+  }
+}
 
 const MAX_TITLE_LENGTH = 200
 
@@ -44,12 +52,19 @@ export const CreatePostScreen: FC<CreatePostScreenProps> = function CreatePostSc
   } = useAppTheme()
   const { urlPreviewData, fetchUrlPreview } = useUrlPreview()
 
-  const [showUrlInput, setShowUrlInput] = useState(false)
-  const [title, setTitle] = useState("")
-  const [body, setBody] = useState("")
-  const [urlPreviewImage, setUrlPreviewImage] = useState("")
+  const {
+    title,
+    body,
+    selectedSubCategory,
+    urlPreviewImage,
+    setTitle,
+    setBody,
+    setUrlPreviewImage,
+    reset,
+  } = useCreatePostStore()
 
-  const isNextDisabled = !title?.trim()
+  const [showUrlInput, setShowUrlInput] = useState(false)
+  const [showDiscardModal, setShowDiscardModal] = useState(false)
 
   useEffect(() => {
     if (urlPreviewData) {
@@ -57,7 +72,7 @@ export const CreatePostScreen: FC<CreatePostScreenProps> = function CreatePostSc
       setBody(urlPreviewData.description || "")
       setUrlPreviewImage(urlPreviewData.image || "")
     }
-  }, [urlPreviewData])
+  }, [urlPreviewData, setTitle, setBody, setUrlPreviewImage])
 
   const handleImagePress = useCallback(async () => {
     console.log("image pressed")
@@ -77,7 +92,7 @@ export const CreatePostScreen: FC<CreatePostScreenProps> = function CreatePostSc
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Videos,
       allowsMultipleSelection: false,
-      // selectionLimit: allowedMedia - framesLength, // TODO: Add this post store fix
+      selectionLimit: 1,
       allowsEditing: false,
       aspect: [4, 3],
       quality: 1,
@@ -100,21 +115,83 @@ export const CreatePostScreen: FC<CreatePostScreenProps> = function CreatePostSc
     setUrlPreviewImage("")
   }
 
+  const isNextDisabled = !title.trim()
+  const showPostButton = !!selectedSubCategory
+  const buttonText = showPostButton ? "Post" : "Next"
+
+  useEffect(() => {
+    return () => {
+      // Only reset if navigating away from the create post flow
+      if (navigation.getState().routes.length === 1) {
+        reset()
+      }
+    }
+  }, [reset, navigation])
+
+  const handleSubCategoryPress = () => {
+    navigation.navigate("PostTo")
+  }
+
+  const handleBackPress = useCallback(() => {
+    const hasContent = !!(title.trim() || body.trim() || urlPreviewImage)
+
+    if (hasContent) {
+      setShowDiscardModal(true)
+    } else {
+      navigation.goBack()
+    }
+  }, [title, body, navigation, urlPreviewImage])
+
+  const handleDiscard = useCallback(() => {
+    reset()
+    setShowDiscardModal(false)
+    navigation.goBack()
+  }, [reset, navigation])
+
   return (
     <Screen contentContainerStyle={themed($root)} safeAreaEdges={["bottom", "top"]}>
+      <ConfirmationModal
+        cancelText="Cancel"
+        confirmText="Discard"
+        message="Are you sure you want to discard your post?"
+        onCancel={() => setShowDiscardModal(false)}
+        onConfirm={handleDiscard}
+        title="Discard post?"
+        visible={showDiscardModal}
+      />
       <View style={themed($header)}>
-        <Pressable onPress={() => navigation.goBack()}>
+        <Pressable onPress={handleBackPress}>
           <X color={colors.text} size={24} weight="bold" />
         </Pressable>
         <Button
-          text="Next"
-          disabled={!title}
+          text={buttonText}
+          disabled={isNextDisabled}
           onPress={() => {
-            navigation.navigate("PostTo")
+            if (showPostButton) {
+              console.log("Creating post...")
+            } else {
+              navigation.navigate("PostTo")
+            }
           }}
           style={isNextDisabled ? themed($nextButtonDisabled) : themed($nextButton)}
         />
       </View>
+
+      {selectedSubCategory ? (
+        <Pressable onPress={handleSubCategoryPress} style={themed($subCategoryContainer)}>
+          <View style={themed($subCategory)}>
+            <FastImage
+              source={{
+                uri: selectedSubCategory.imageUrl,
+              }}
+              style={themed($subCategoryImage)}
+            />
+            <Text text={selectedSubCategory.name} />
+            <CaretDown color={colors.text} size={14} />
+          </View>
+          <Text size="xxs" text="RULES" />
+        </Pressable>
+      ) : null}
 
       <TextInput
         placeholder="Title"
@@ -199,6 +276,23 @@ const $title: ThemedStyle<TextStyle> = ({ colors, spacing }) => ({
   fontWeight: "bold",
   color: colors.text,
   padding: spacing.md,
+})
+
+const $subCategoryContainer: ThemedStyle<ViewStyle> = ({ spacing }) => ({
+  ...$styles.rowBetween,
+  paddingTop: spacing.md,
+  paddingHorizontal: spacing.md,
+})
+
+const $subCategory: ThemedStyle<ViewStyle> = () => ({
+  ...$styles.rowCenter,
+  gap: 4,
+})
+
+const $subCategoryImage: ThemedStyle<ImageStyle> = () => ({
+  height: 20,
+  width: 20,
+  borderRadius: 10,
 })
 
 const $urlInputContainer: ThemedStyle<ViewStyle> = ({ spacing }) => ({
