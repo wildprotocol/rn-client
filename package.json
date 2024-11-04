@@ -29,7 +29,7 @@
     "bundle:web": "npx expo export --platform web",
     "serve:web": "npx server dist",
     "prebuild:clean": "npx expo prebuild --clean",
-    "build-dev-ios": "eas build --profile development --platform ios"
+    "submit": "eas submit --platform ios --profile production"
   },
   "dependencies": {
     "@ethersproject/shims": "^5.7.0",
