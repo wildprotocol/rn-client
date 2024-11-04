@@ -6,7 +6,7 @@
     "slug": "wildcard",
     "scheme": "wildcard",
     "owner": "wildcard-app",
-    "version": "2.0.0",
+    "version": "1.0.2",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
     "icon": "./assets/images/app-icon-all.png",
@@ -39,7 +39,7 @@
       "icon": "./assets/images/app-icon-ios.png",
       "supportsTablet": true,
       "bundleIdentifier": "lol.wildcard.ios",
-      "buildNumber": "55",
+      "buildNumber": "46",
       "splash": {
         "image": "./assets/images/splash-logo-ios-mobile.png",
         "tabletImage": "./assets/images/splash-logo-ios-tablet.png",
