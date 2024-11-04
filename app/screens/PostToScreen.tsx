@@ -29,7 +29,7 @@ const SubCategory = memo(
       <Pressable onPress={onPress} style={$subCategory}>
         <FastImage source={{ uri }} style={themed($image)} />
         <View>
-          <Text text={`r/${title}`} />
+          <Text text={`sc/${title}`} />
           {!!onlineCount && <Text size="xxs" text={`${onlineCount} online`} />}
         </View>
       </Pressable>

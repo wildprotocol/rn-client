@@ -20,15 +20,15 @@ interface RecentlyVisited {
 
 export const COMMUNITIES: Community[] = [
   {
-    name: "r/programming",
+    name: "sc/programming",
     uri: "https://reddit.com/r/programming",
   },
   {
-    name: "r/reactnative",
+    name: "sc/reactnative",
     uri: "https://reddit.com/r/reactnative",
   },
   {
-    name: "r/javascript",
+    name: "sc/javascript",
     uri: "https://reddit.com/r/javascript",
   },
 ]
