@@ -1,7 +1,7 @@
 import { FC, memo } from "react"
 import { Pressable, View, ViewStyle } from "react-native"
 
-import FastImage, { ImageStyle } from "react-native-fast-image"
+import FastImage, { ImageStyle } from "@d11/react-native-fast-image"
 
 import { Header, ListView, Screen, Text } from "@/components"
 import { SUBCATEGORIES_API_RESPONSE } from "@/data/dummyData"

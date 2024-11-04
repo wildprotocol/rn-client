@@ -9,9 +9,9 @@ import {
   ViewStyle,
 } from "react-native"
 
+import FastImage, { ImageStyle } from "@d11/react-native-fast-image"
 import { FlashList, ListRenderItem } from "@shopify/flash-list"
 import { debounce } from "lodash"
-import FastImage, { ImageStyle } from "react-native-fast-image"
 
 import { ThemedStyle } from "@/theme"
 import { useAppTheme } from "@/utils"

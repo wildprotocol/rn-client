@@ -1,10 +1,10 @@
 import { FC, useCallback, useEffect, useState } from "react"
 import { Pressable, TextInput, TextStyle, View, ViewStyle } from "react-native"
 
+import FastImage, { ImageStyle } from "@d11/react-native-fast-image"
 import * as ImagePicker from "expo-image-picker"
 // import { debounce } from "lodash"
 import { CaretDown, Image, Link, PlayCircle, X } from "phosphor-react-native"
-import FastImage, { ImageStyle } from "react-native-fast-image"
 
 import { Button, Screen, Text } from "@/components"
 import { ConfirmationModal } from "@/components/ConfirmationModal"

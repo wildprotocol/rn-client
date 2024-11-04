@@ -1,9 +1,9 @@
 import { useCallback, useRef, useState } from "react"
 import { Pressable, StyleProp, TextInput, TextStyle, View, ViewStyle } from "react-native"
 
+import FastImage, { ImageStyle } from "@d11/react-native-fast-image"
 import { FlashList } from "@shopify/flash-list"
 import { debounce } from "lodash"
-import FastImage, { ImageStyle } from "react-native-fast-image"
 
 import { Text } from "@/components"
 import { $styles, ThemedStyle } from "@/theme"

@@ -1,7 +1,7 @@
 import { Pressable, StyleProp, View, ViewStyle } from "react-native"
 
+import FastImage, { ImageStyle } from "@d11/react-native-fast-image"
 import { Star } from "phosphor-react-native"
-import FastImage, { ImageStyle } from "react-native-fast-image"
 
 import { $styles, ThemedStyle } from "@/theme"
 import { useAppTheme } from "@/utils"

@@ -1,9 +1,9 @@
 import { useCallback } from "react"
 import { Keyboard, Pressable, StyleProp, View, ViewStyle } from "react-native"
 
+import FastImage, { ImageStyle } from "@d11/react-native-fast-image"
 import { FlashList } from "@shopify/flash-list"
 import { CaretDown } from "phosphor-react-native"
-import FastImage, { ImageStyle } from "react-native-fast-image"
 
 import { ChannelPickerSkeleton, Text } from "@/components"
 // import { useDispatch } from "react-redux"
