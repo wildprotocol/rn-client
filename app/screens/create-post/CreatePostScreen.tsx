@@ -1,8 +1,8 @@
-import { FC, useCallback, useEffect, useMemo, useState } from "react"
+import { FC, useCallback, useEffect, useState } from "react"
 import { Pressable, TextInput, TextStyle, View, ViewStyle } from "react-native"
 
 import * as ImagePicker from "expo-image-picker"
-import { debounce } from "lodash"
+// import { debounce } from "lodash"
 import { CaretDown, Image, Link, PlayCircle, X } from "phosphor-react-native"
 import FastImage, { ImageStyle } from "react-native-fast-image"
 
@@ -50,16 +50,20 @@ export const CreatePostScreen: FC<CreatePostScreenProps> = function CreatePostSc
   const {
     theme: { colors },
   } = useAppTheme()
-  const { urlPreviewData, fetchUrlPreview } = useUrlPreview()
+  const { urlPreviewData } = useUrlPreview()
 
   const {
     title,
     body,
     selectedSubCategory,
     urlPreviewImage,
+    selectedImages,
+    selectedVideos,
     setTitle,
     setBody,
     setUrlPreviewImage,
+    setSelectedImages,
+    setSelectedVideos,
     reset,
   } = useCreatePostStore()
 
@@ -75,20 +79,20 @@ export const CreatePostScreen: FC<CreatePostScreenProps> = function CreatePostSc
   }, [urlPreviewData, setTitle, setBody, setUrlPreviewImage])
 
   const handleImagePress = useCallback(async () => {
-    console.log("image pressed")
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsMultipleSelection: true,
-      // selectionLimit: allowedMedia - framesLength, // TODO: Add this post store fix
-      // allowsEditing: true,
+      selectionLimit: 1,
       aspect: [4, 3],
       quality: 1,
     })
-    console.log("imageResult", result)
-  }, [])
+
+    if (!result.canceled && result.assets.length > 0) {
+      setSelectedImages(result.assets)
+    }
+  }, [setSelectedImages])
 
   const handleVideoPress = useCallback(async () => {
-    console.log("video pressed")
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Videos,
       allowsMultipleSelection: false,
@@ -97,23 +101,26 @@ export const CreatePostScreen: FC<CreatePostScreenProps> = function CreatePostSc
       aspect: [4, 3],
       quality: 1,
     })
-    console.log("imageResult", result)
-  }, [])
 
-  const handleUrlChange = useMemo(
-    () =>
-      debounce(async (text: string) => {
-        await fetchUrlPreview(text)
-      }, 350),
-    [fetchUrlPreview],
-  )
+    if (!result.canceled && result.assets.length > 0) {
+      setSelectedVideos(result.assets)
+    }
+  }, [setSelectedVideos])
 
-  const handleUrlInputClose = () => {
-    setShowUrlInput(false)
-    setTitle("")
-    setBody("")
-    setUrlPreviewImage("")
-  }
+  // const handleUrlChange = useMemo(
+  //   () =>
+  //     debounce(async (text: string) => {
+  //       await fetchUrlPreview(text)
+  //     }, 350),
+  //   [fetchUrlPreview],
+  // )
+
+  // const handleUrlInputClose = () => {
+  //   setShowUrlInput(false)
+  //   setTitle("")
+  //   setBody("")
+  //   setUrlPreviewImage("")
+  // }
 
   const isNextDisabled = !title.trim()
   const showPostButton = !!selectedSubCategory
@@ -202,28 +209,41 @@ export const CreatePostScreen: FC<CreatePostScreenProps> = function CreatePostSc
         maxLength={MAX_TITLE_LENGTH}
         multiline
       />
-      {showUrlInput && (
-        <View style={themed($urlInputContainer)}>
-          {urlPreviewImage ? (
-            <View style={themed($imageContainer)}>
-              <FastImage source={{ uri: urlPreviewImage }} style={themed($previewImage)} />
-              <Pressable onPress={handleUrlInputClose} style={themed($removeImageButton)}>
+      {selectedImages?.length > 0 && (
+        <View style={themed($selectedImagesContainer)}>
+          {selectedImages.map((image, index) => (
+            <View key={image.uri} style={themed($selectedImageWrapper)}>
+              <FastImage source={{ uri: image.uri }} style={themed($selectedImage)} />
+              <Pressable
+                onPress={() => {
+                  setSelectedImages(selectedImages.filter((_, i) => i !== index))
+                }}
+                style={themed($removeImageButton)}
+              >
                 <X color={colors.text} size={20} weight="bold" />
               </Pressable>
             </View>
-          ) : (
-            <>
-              <TextInput
-                placeholder="Enter link"
-                placeholderTextColor={colors.textDim}
-                style={themed($body)}
-                onChangeText={handleUrlChange}
-              />
-              <Pressable onPress={handleUrlInputClose} style={themed($closeUrlInput)}>
-                <X color={colors.text} size={20} />
+          ))}
+        </View>
+      )}
+      {selectedVideos?.length > 0 && (
+        <View style={themed($selectedImagesContainer)}>
+          {selectedVideos.map((video, index) => (
+            <View key={video.uri} style={themed($selectedImageWrapper)}>
+              <FastImage source={{ uri: video.uri }} style={themed($selectedImage)} />
+              <View style={themed($videoIndicator)}>
+                <PlayCircle color={colors.text} size={24} weight="fill" />
+              </View>
+              <Pressable
+                onPress={() => {
+                  setSelectedVideos(selectedVideos.filter((_, i) => i !== index))
+                }}
+                style={themed($removeImageButton)}
+              >
+                <X color={colors.text} size={20} weight="bold" />
               </Pressable>
-            </>
-          )}
+            </View>
+          ))}
         </View>
       )}
 
@@ -295,17 +315,17 @@ const $subCategoryImage: ThemedStyle<ImageStyle> = () => ({
   borderRadius: 10,
 })
 
-const $urlInputContainer: ThemedStyle<ViewStyle> = ({ spacing }) => ({
-  ...$styles.rowBetween,
-  marginBottom: spacing.sm,
-})
+// const $urlInputContainer: ThemedStyle<ViewStyle> = ({ spacing }) => ({
+//   ...$styles.rowBetween,
+//   marginBottom: spacing.sm,
+// })
 
-const $closeUrlInput: ThemedStyle<ViewStyle> = ({ colors, spacing }) => ({
-  backgroundColor: colors.backgroundDim,
-  borderRadius: 20,
-  marginRight: spacing.md,
-  padding: spacing.xs,
-})
+// const $closeUrlInput: ThemedStyle<ViewStyle> = ({ colors, spacing }) => ({
+//   backgroundColor: colors.backgroundDim,
+//   borderRadius: 20,
+//   marginRight: spacing.md,
+//   padding: spacing.xs,
+// })
 
 const $body: ThemedStyle<TextStyle> = ({ colors, spacing }) => ({
   fontSize: 16,
@@ -321,16 +341,16 @@ const $footer: ThemedStyle<ViewStyle> = ({ spacing }) => ({
   gap: spacing.md,
 })
 
-const $imageContainer: ThemedStyle<ViewStyle> = () => ({
-  position: "relative",
-  width: "100%",
-})
+// const $imageContainer: ThemedStyle<ViewStyle> = () => ({
+//   position: "relative",
+//   width: "100%",
+// })
 
-const $previewImage: ThemedStyle<ImageStyle> = ({ spacing }) => ({
-  height: 200,
-  width: "100%",
-  marginHorizontal: spacing.md,
-})
+// const $previewImage: ThemedStyle<ImageStyle> = ({ spacing }) => ({
+//   height: 200,
+//   width: "100%",
+//   marginHorizontal: spacing.md,
+// })
 
 const $removeImageButton: ThemedStyle<ViewStyle> = ({ colors, spacing }) => ({
   position: "absolute",
@@ -339,4 +359,29 @@ const $removeImageButton: ThemedStyle<ViewStyle> = ({ colors, spacing }) => ({
   backgroundColor: colors.backgroundDim,
   borderRadius: 20,
   padding: spacing.xs,
+})
+
+const $selectedImagesContainer: ThemedStyle<ViewStyle> = ({ spacing }) => ({
+  paddingHorizontal: spacing.md,
+  marginBottom: spacing.md,
+})
+
+const $selectedImageWrapper: ThemedStyle<ViewStyle> = ({ spacing }) => ({
+  position: "relative",
+  marginBottom: spacing.sm,
+})
+
+const $selectedImage: ThemedStyle<ImageStyle> = () => ({
+  height: 200,
+  width: "100%",
+  borderRadius: 8,
+})
+
+const $videoIndicator: ThemedStyle<ViewStyle> = ({ colors }) => ({
+  position: "absolute",
+  bottom: 8,
+  right: 8,
+  backgroundColor: colors.backgroundDim,
+  borderRadius: 20,
+  padding: 4,
 })

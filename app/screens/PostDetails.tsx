@@ -263,7 +263,7 @@ export const PostDetailsScreen: FC<PostDetailsScreenProps> = ({ route, navigatio
         <Header
           leftIcon="x"
           onLeftPress={() => navigation.goBack()}
-          title={`r/${post.subcategory}`}
+          title={`sc/${post.subcategory}`}
           RightActionComponent={
             <Pressable onPress={toggleSearch} style={$searchButton} hitSlop={8}>
               <MagnifyingGlass size={20} color={theme.colors.text} />

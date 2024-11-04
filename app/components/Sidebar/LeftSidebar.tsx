@@ -2,8 +2,10 @@ import { memo, useCallback } from "react"
 import { View, ViewStyle } from "react-native"
 
 import { DrawerContentComponentProps, DrawerContentScrollView } from "@react-navigation/drawer"
+import { useNavigation } from "@react-navigation/native"
 import { FolderStar, Plus, PresentationChart } from "phosphor-react-native"
 
+import { NavigationProps } from "@/navigators/types"
 import { $styles, ThemedStyle } from "@/theme"
 import { useAppTheme } from "@/utils"
 
@@ -15,12 +17,20 @@ import { COMMUNITIES, RECENTLY_VISITED } from "./sidebarConstants"
 
 const RecentlyVisitedSection: React.FC = memo(() => {
   const { themed } = useAppTheme()
+  const navigation = useNavigation<NavigationProps>()
 
   const renderItem = useCallback(
     ({ item }: { item: (typeof RECENTLY_VISITED)[0] }) => (
-      <SidebarItem name={`r/${item.name}`} uri={item.uri} onPress={() => {}} isFavourite={false} />
+      <SidebarItem
+        name={`sc/${item.name}`}
+        uri={item.uri}
+        onPress={() => {
+          navigation.navigate("SubCategory", { subcategoryId: `sc/${item.name}`, title: item.name })
+        }}
+        isFavourite={false}
+      />
     ),
-    [],
+    [navigation],
   )
 
   return (
@@ -45,18 +55,21 @@ const CommunitiesSection: React.FC = memo(() => {
     themed,
     theme: { colors },
   } = useAppTheme()
+  const navigation = useNavigation<NavigationProps>()
 
   const renderItem = useCallback(
     ({ item }: { item: (typeof COMMUNITIES)[0] }) => (
       <SidebarItem
         name={item.name}
         uri={item.uri}
-        onPress={() => {}}
+        onPress={() => {
+          navigation.navigate("SubCategory", { subcategoryId: item.name, title: item.name })
+        }}
         onFavouritePress={() => {}}
         isFavourite
       />
     ),
-    [],
+    [navigation],
   )
 
   return (
